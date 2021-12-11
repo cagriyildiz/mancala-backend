@@ -46,4 +46,7 @@ public class GameDto {
   @Positive
   private Long activePlayerId;
 
+  @Null
+  private BoardDto board;
+
 }

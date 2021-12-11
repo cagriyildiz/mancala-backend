@@ -7,7 +7,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.UUID;
+
+import static com.bol.mancala.domain.Board.BOARD_SIZE_X;
+import static com.bol.mancala.domain.Board.BOARD_SIZE_Y;
 
 @Getter
 @Setter
@@ -47,10 +51,15 @@ public class Game {
 
   private Integer initialStoneCount;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "board_id")
+  private Board board;
+
   @PrePersist
   private void setDefaults() {
     setDefaultActivePlayer();
     setDefaultInitialStoneCount();
+    initializeBoard();
   }
 
   private void setDefaultActivePlayer() {
@@ -64,6 +73,18 @@ public class Game {
     // set default initial stone count
     if (initialStoneCount == null) {
       initialStoneCount = DEFAULT_INITIAL_STONE_COUNT;
+    }
+  }
+
+  private void initializeBoard() {
+    if (board == null) {
+      int[][] pits = new int[BOARD_SIZE_Y][BOARD_SIZE_X];
+      for (int[] row : pits) {
+        Arrays.fill(row, 0, BOARD_SIZE_X - 1, initialStoneCount);
+      }
+      board = Board.builder()
+          .pits(pits)
+          .build();
     }
   }
 

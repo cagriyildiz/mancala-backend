@@ -7,10 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.stream.IntStream;
+
+import static com.bol.mancala.domain.Board.BOARD_SIZE_X;
+import static com.bol.mancala.domain.Board.BOARD_SIZE_Y;
 import static com.bol.mancala.domain.Game.DEFAULT_INITIAL_STONE_COUNT;
 import static com.bol.mancala.domain.Game.MIN_INITIAL_STONE_COUNT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test Game JPA Entity")
 @DataJpaTest
@@ -75,11 +80,50 @@ class GameTest {
     assertNotNull(newGame.getVersion());
     assertNotNull(newGame.getCreatedDate());
     assertNotNull(newGame.getLastModifiedDate());
+    assertNotNull(newGame.getBoard());
   }
 
   private void verifyDefaults(Game newGame) {
     assertEquals(FIRST_PLAYER_ID, newGame.getActivePlayerId());
     assertEquals(DEFAULT_INITIAL_STONE_COUNT, newGame.getInitialStoneCount());
+    verifyDefaultBoard(newGame);
+  }
+
+  private void verifyDefaultBoard(Game game) {
+    Board board = game.getBoard();
+    int[][] pits = board.getPits();
+    assertEquals(BOARD_SIZE_Y, pits.length);
+    assertEquals(BOARD_SIZE_X, pits[0].length);
+    verifyPits(pits, game.getInitialStoneCount());
+  }
+
+  private void verifyPits(int[][] pits, int initialStoneCount) {
+    int[][] expectedPits = getExpectedPits(initialStoneCount);
+    IntStream expectedPitsStream = Arrays.stream(expectedPits).flatMapToInt(Arrays::stream);
+    IntStream actualPitsStream = Arrays.stream(pits).flatMapToInt(Arrays::stream);
+    isStreamsEqual(expectedPitsStream, actualPitsStream);
+  }
+
+  private void isStreamsEqual(IntStream stream1, IntStream stream2) {
+    Iterator<Integer> iterator1 = stream1.iterator();
+    Iterator<Integer> iterator2 = stream2.iterator();
+
+    // check every value is equal in both collection
+    while (iterator1.hasNext() && iterator2.hasNext()) {
+      assertEquals(iterator1.next(), iterator2.next());
+    }
+
+    // check if no other value is left in both collection
+    assertFalse(iterator1.hasNext());
+    assertFalse(iterator2.hasNext());
+  }
+
+  private int[][] getExpectedPits(int initialStoneCount) {
+    int[][] expectedPits = new int[BOARD_SIZE_Y][BOARD_SIZE_X];
+    for (int i = 0; i < BOARD_SIZE_Y; i++) {
+      Arrays.fill(expectedPits[i], 0, BOARD_SIZE_X - 1, initialStoneCount);
+    }
+    return expectedPits;
   }
 
 }
