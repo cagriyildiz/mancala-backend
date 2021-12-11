@@ -47,4 +47,24 @@ public class Game {
 
   private Integer initialStoneCount;
 
+  @PrePersist
+  private void setDefaults() {
+    setDefaultActivePlayer();
+    setDefaultInitialStoneCount();
+  }
+
+  private void setDefaultActivePlayer() {
+    // set default value for the user who starts the game first
+    if (activePlayerId == null) {
+      activePlayerId = firstPlayerId;
+    }
+  }
+
+  private void setDefaultInitialStoneCount() {
+    // set default initial stone count
+    if (initialStoneCount == null) {
+      initialStoneCount = DEFAULT_INITIAL_STONE_COUNT;
+    }
+  }
+
 }
