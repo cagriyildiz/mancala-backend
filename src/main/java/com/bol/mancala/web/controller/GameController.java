@@ -32,7 +32,8 @@ public class GameController {
   public ResponseEntity<GameDto> playGame(@PathVariable UUID gameId,
                                           // only small pits are accepted as a parameter
                                           @RequestParam(value = "pit") @PositiveOrZero @Max(BOARD_SIZE_X - 2) int pit) {
-    return new ResponseEntity<>(HttpStatus.OK);
+    GameDto newGameState = gameService.playGame(gameId, pit);
+    return new ResponseEntity<>(newGameState, HttpStatus.OK);
   }
 
 }

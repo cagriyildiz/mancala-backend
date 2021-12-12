@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static com.bol.mancala.domain.Board.BOARD_SIZE_X;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -69,6 +70,13 @@ class GameControllerTest {
   @DisplayName("Play Game")
   @Test
   void playGame() throws Exception {
+    GameDto gameDto = GameDto.builder()
+        .firstPlayerId(FIRST_PLAYER_ID)
+        .secondPlayerId(SECOND_PLAYER_ID)
+        .build();
+
+    given(gameService.playGame(any(), anyInt())).willReturn(gameDto);
+
     mockMvc.perform(
             get(ENDPOINT_PLAY + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
