@@ -36,7 +36,7 @@ class GameTest {
     Game game = Game.builder()
         .firstPlayerId(FIRST_PLAYER_ID)
         .secondPlayerId(SECOND_PLAYER_ID)
-        .activePlayerId(SECOND_PLAYER_ID)
+        .activePlayer(Game.PlayerOrder.SECOND)
         .initialStoneCount(MIN_INITIAL_STONE_COUNT)
         .build();
 
@@ -49,7 +49,7 @@ class GameTest {
     // check values are assigned correctly
     assertEquals(FIRST_PLAYER_ID, newGame.getFirstPlayerId());
     assertEquals(SECOND_PLAYER_ID, newGame.getSecondPlayerId());
-    assertEquals(SECOND_PLAYER_ID, newGame.getActivePlayerId());
+    assertEquals(Game.PlayerOrder.SECOND, newGame.getActivePlayer());
     assertEquals(MIN_INITIAL_STONE_COUNT, newGame.getInitialStoneCount());
   }
 
@@ -84,7 +84,7 @@ class GameTest {
   }
 
   private void verifyDefaults(Game newGame) {
-    assertEquals(FIRST_PLAYER_ID, newGame.getActivePlayerId());
+    assertEquals(Game.PlayerOrder.FIRST, newGame.getActivePlayer());
     assertEquals(DEFAULT_INITIAL_STONE_COUNT, newGame.getInitialStoneCount());
     verifyDefaultBoard(newGame);
   }

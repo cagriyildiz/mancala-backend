@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -43,8 +40,8 @@ public class GameDto {
   @Min(MIN_INITIAL_STONE_COUNT)
   private Integer initialStoneCount;
 
-  @Positive
-  private Long activePlayerId;
+  @PositiveOrZero
+  private Integer activePlayer;
 
   @Null
   private BoardDto board;

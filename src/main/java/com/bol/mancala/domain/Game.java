@@ -21,6 +21,10 @@ import static com.bol.mancala.domain.Board.BOARD_SIZE_Y;
 @Entity
 public class Game {
 
+  public enum PlayerOrder {
+    FIRST, SECOND
+  }
+
   @Transient
   public static final int DEFAULT_INITIAL_STONE_COUNT = 6;
 
@@ -47,7 +51,8 @@ public class Game {
 
   private Long secondPlayerId;
 
-  private Long activePlayerId;
+  @Enumerated(EnumType.ORDINAL)
+  private PlayerOrder activePlayer;
 
   private Integer initialStoneCount;
 
@@ -64,8 +69,8 @@ public class Game {
 
   private void setDefaultActivePlayer() {
     // set default value for the user who starts the game first
-    if (activePlayerId == null) {
-      activePlayerId = firstPlayerId;
+    if (activePlayer == null) {
+      activePlayer = PlayerOrder.FIRST;
     }
   }
 
