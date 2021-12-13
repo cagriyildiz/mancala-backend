@@ -6,6 +6,7 @@ import com.bol.mancala.repository.GameRepository;
 import com.bol.mancala.service.GameService;
 import com.bol.mancala.web.mapper.GameMapper;
 import com.bol.mancala.web.mapper.impl.ActivePlayerMapper;
+import com.bol.mancala.web.mapper.impl.WinnerMapper;
 import com.bol.mancala.web.model.GameDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class GameServiceImpl implements GameService {
   private final GameMapper gameMapper;
 
   private final ActivePlayerMapper activePlayerMapper;
+
+  private final WinnerMapper winnerMapper;
 
   @Override
   public GameDto createNewGame(GameDto gameDto) {
@@ -38,6 +41,12 @@ public class GameServiceImpl implements GameService {
 
     if (gameState[activePlayer][startingPit] != 0) { // prevent player to start from an empty pit
       int nextActivePlayer = movePits(gameState, activePlayer, startingPit);
+
+      boolean isFinished = gameIsFinished(gameState, activePlayer);
+      if (isFinished) {
+        game.setFinished(true);
+        game.setWinner(getWinner(gameState));
+      }
 
       game.setActivePlayer(activePlayerMapper.asEnum(nextActivePlayer));
       gameRepository.save(game);
@@ -88,6 +97,44 @@ public class GameServiceImpl implements GameService {
 
     int totalPoints = stonesInOppositePit + stonesInCurrentPit;
     state[currentSide][boardSize - 1] += totalPoints; // put all points to the big pit
+  }
+
+  private Game.Winner getWinner(int[][] gameState) {
+    int boardSize = gameState[0].length - 1;
+    int winner = -1;
+    if (gameState[0][boardSize] > gameState[1][boardSize]) {
+      winner = 0;
+    } else if (gameState[1][boardSize] > gameState[0][boardSize]) {
+      winner = 1;
+    }
+    return winnerMapper.asEnum(winner);
+  }
+
+  private boolean gameIsFinished(int[][] gameState, int activePlayer) {
+    if (pitsAreEmpty(gameState[activePlayer])) {
+      int oppositeSide = nextSide(activePlayer);
+      collectRemainderStones(gameState[oppositeSide]);
+      return true;
+    }
+    return false;
+  }
+
+  private boolean pitsAreEmpty(int[] pits) {
+    for (int i = 0; i < pits.length - 1; i++) { // don't consider the big pit
+      if (pits[i] != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private void collectRemainderStones(int[] pits) {
+    int total = 0;
+    for (int i = 0; i < pits.length - 1; i++) { // don't consider the big pit
+      total += pits[i];
+      pits[i] = 0;
+    }
+    pits[pits.length - 1] += total;
   }
 
   private int getTotalPlayerCount() {

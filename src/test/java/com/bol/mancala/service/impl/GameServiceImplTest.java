@@ -158,6 +158,54 @@ class GameServiceImplTest {
     verifyPlayGame(false, startingPit, expectedPits, game);
   }
 
+  @DisplayName("Play Game - The End")
+  @Test
+  void playGameTheEnd() {
+    final int startingPit = 5;
+    final int[][] actualPits = new int[][]{
+        {0, 0, 0, 0, 0, 5, 32},
+        {1, 5, 4, 2, 10, 10, 3}
+    };
+    final int[][] expectedPits = new int[][]{
+        {0, 0, 0, 0, 0, 0, 33},
+        {0, 0, 0, 0, 0, 0, 39}
+    };
+
+    Game game = Game.builder()
+        .activePlayer(Game.PlayerOrder.FIRST)
+        .board(Board.builder().pits(actualPits).build())
+        .build();
+
+    verifyPlayGame(false, startingPit, expectedPits, game);
+
+    assertTrue(game.isFinished());
+    assertEquals(Game.Winner.SECOND, game.getWinner());
+  }
+
+  @DisplayName("Play Game - The End Tie Game")
+  @Test
+  void playGameTheEndTieGame() {
+    final int startingPit = 5;
+    final int[][] actualPits = new int[][]{
+        {0, 0, 0, 0, 0, 5, 35},
+        {1, 5, 4, 2, 4, 3, 13}
+    };
+    final int[][] expectedPits = new int[][]{
+        {0, 0, 0, 0, 0, 0, 36},
+        {0, 0, 0, 0, 0, 0, 36}
+    };
+
+    Game game = Game.builder()
+        .activePlayer(Game.PlayerOrder.FIRST)
+        .board(Board.builder().pits(actualPits).build())
+        .build();
+
+    verifyPlayGame(false, startingPit, expectedPits, game);
+
+    assertTrue(game.isFinished());
+    assertEquals(Game.Winner.TIE, game.getWinner());
+  }
+
   private void verifyPlayGame(boolean nextPlayerIsSame, int startingPit, int[][] expectedPits, Game game) {
     given(gameRepository.getById(any())).willReturn(game);
 
