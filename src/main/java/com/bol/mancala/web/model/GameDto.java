@@ -47,6 +47,9 @@ public class GameDto {
   private Integer winner;
 
   @Null
+  private Boolean finished;
+
+  @Null
   private BoardDto board;
 
 }

@@ -61,6 +61,8 @@ public class Game {
   @Enumerated
   private Winner winner;
 
+  private boolean finished = false;
+
   private Integer initialStoneCount;
 
   @OneToOne(cascade = CascadeType.ALL)
