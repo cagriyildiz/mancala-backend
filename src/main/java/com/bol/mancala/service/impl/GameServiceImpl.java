@@ -63,12 +63,32 @@ public class GameServiceImpl implements GameService {
       if (i == boardSize - 1) { // if the current pit is active player's own big pit
         if (stonesInHand == 0) {
           nextPlayerIsTheSame = true; // last stone ends up in the big pit
+          break;
         }
         side = (side + 1) % totalPlayerCount; // move to the next side of the board
         i = -1;
       }
     }
+
+    // if its own side and not big pit and current pit has only 1 stone
+    if (side == activePlayer && !nextPlayerIsTheSame && state[side][i] == 1) {
+      captureStones(state, side, totalPlayerCount, boardSize, i);
+    }
+
     return nextPlayerIsTheSame ? activePlayer : (activePlayer + 1) % totalPlayerCount;
+  }
+
+  private void captureStones(int[][] state, int currentSide, int totalPlayerCount, int boardSize, int currentPit) {
+    int oppositeSide = (currentSide + 1) % totalPlayerCount;
+    int oppositePit = boardSize - currentPit - 2; // minus 2 because; 1 for big pit, 1 for 0 indexed array
+    int stonesInOppositePit = state[oppositeSide][oppositePit];
+    state[oppositeSide][oppositePit] = 0; // empty opposite pit
+
+    int stonesInCurrentPit = state[currentSide][currentPit];
+    state[currentSide][currentPit] = 0; // empty current pit
+
+    int totalPoints = stonesInOppositePit + stonesInCurrentPit;
+    state[currentSide][boardSize - 1] += totalPoints; // put all points to the big pit
   }
 
 }

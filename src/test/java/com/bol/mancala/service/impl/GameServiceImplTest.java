@@ -137,6 +137,27 @@ class GameServiceImplTest {
     verifyPlayGame(true, startingPit, expectedPits, game);
   }
 
+  @DisplayName("Play Game - Capture Stones")
+  @Test
+  void playGameCaptureStones() {
+    final int startingPit = 1;
+    final int[][] actualPits = new int[][]{
+        {3, 0, 12, 9, 9, 0, 12},
+        {1, 1, 0, 2, 10, 10, 3}
+    };
+    final int[][] expectedPits = new int[][]{
+        {3, 0, 12, 0, 9, 0, 12},
+        {1, 0, 0, 2, 10, 10, 13}
+    };
+
+    Game game = Game.builder()
+        .activePlayer(Game.PlayerOrder.SECOND)
+        .board(Board.builder().pits(actualPits).build())
+        .build();
+
+    verifyPlayGame(false, startingPit, expectedPits, game);
+  }
+
   private void verifyPlayGame(boolean nextPlayerIsSame, int startingPit, int[][] expectedPits, Game game) {
     given(gameRepository.getById(any())).willReturn(game);
 
