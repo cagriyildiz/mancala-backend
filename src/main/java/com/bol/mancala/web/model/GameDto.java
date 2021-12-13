@@ -44,6 +44,9 @@ public class GameDto {
   private Integer activePlayer;
 
   @Null
+  private Integer winner;
+
+  @Null
   private BoardDto board;
 
 }

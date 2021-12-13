@@ -81,6 +81,7 @@ class GameTest {
     assertNotNull(newGame.getCreatedDate());
     assertNotNull(newGame.getLastModifiedDate());
     assertNotNull(newGame.getBoard());
+    assertNull(newGame.getWinner());
   }
 
   private void verifyDefaults(Game newGame) {

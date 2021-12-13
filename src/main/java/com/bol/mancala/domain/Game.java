@@ -25,6 +25,10 @@ public class Game {
     FIRST, SECOND
   }
 
+  public enum Winner {
+    TIE, FIRST, SECOND
+  }
+
   @Transient
   public static final int DEFAULT_INITIAL_STONE_COUNT = 6;
 
@@ -53,6 +57,9 @@ public class Game {
 
   @Enumerated(EnumType.ORDINAL)
   private PlayerOrder activePlayer;
+
+  @Enumerated
+  private Winner winner;
 
   private Integer initialStoneCount;
 

@@ -25,7 +25,7 @@ public class ActivePlayerMapper {
         }
       }
     }
-    return 0; // default active player
+    return -1;
   }
 
 }
