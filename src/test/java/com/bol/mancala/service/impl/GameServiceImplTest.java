@@ -158,9 +158,33 @@ class GameServiceImplTest {
     verifyPlayGame(false, startingPit, expectedPits, game);
   }
 
-  @DisplayName("Play Game - The End")
+  @DisplayName("Play Game - First Player Wins")
   @Test
-  void playGameTheEnd() {
+  void playGameFirstPlayerWins() {
+    final int startingPit = 5;
+    final int[][] actualPits = new int[][]{
+        {0, 0, 0, 0, 0, 1, 40},
+        {1, 5, 4, 2, 6, 10, 3}
+    };
+    final int[][] expectedPits = new int[][]{
+        {0, 0, 0, 0, 0, 0, 41},
+        {0, 0, 0, 0, 0, 0, 31}
+    };
+
+    Game game = Game.builder()
+        .activePlayer(Game.PlayerOrder.FIRST)
+        .board(Board.builder().pits(actualPits).build())
+        .build();
+
+    verifyPlayGame(true, startingPit, expectedPits, game);
+
+    assertTrue(game.isFinished());
+    assertEquals(Game.Winner.FIRST, game.getWinner());
+  }
+
+  @DisplayName("Play Game - Second Player Wins")
+  @Test
+  void playGameSecondPlayerWins() {
     final int startingPit = 5;
     final int[][] actualPits = new int[][]{
         {0, 0, 0, 0, 0, 5, 32},
