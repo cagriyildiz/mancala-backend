@@ -2,6 +2,7 @@ package com.bol.mancala.web.controller.exception;
 
 import com.bol.mancala.web.model.exception.ExceptionInfo;
 import com.bol.mancala.web.model.exception.ExceptionResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +15,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -21,6 +23,7 @@ public class ControllerExceptionHandler {
   public ResponseEntity<ExceptionResponse> validationErrorHandler(ConstraintViolationException e,
                                                                   HttpServletRequest request) {
     ExceptionResponse response = buildResponse(e, request.getRequestURI());
+    log.info("Invalid request: {}", response);
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
   }
 

@@ -9,10 +9,12 @@ import com.bol.mancala.web.mapper.impl.ActivePlayerMapper;
 import com.bol.mancala.web.mapper.impl.WinnerMapper;
 import com.bol.mancala.web.model.GameDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GameServiceImpl implements GameService {
@@ -29,12 +31,15 @@ public class GameServiceImpl implements GameService {
   public GameDto createNewGame(GameDto gameDto) {
     Game newGame = gameMapper.gameDtoToGame(gameDto);
     Game savedGame = gameRepository.save(newGame);
+    log.info("New game session created: {}", savedGame.getId());
+    log.debug("Initial game state: {}", savedGame);
     return gameMapper.gameToGameDto(savedGame);
   }
 
   @Override
   public GameDto playGame(final UUID gameId, final int startingPit) {
     Game game = gameRepository.getById(gameId);
+    log.debug("Current game state: {}", game);
     int activePlayer = activePlayerMapper.asInteger(game.getActivePlayer());
     Board board = game.getBoard();
     int[][] gameState = board.getPits();
@@ -44,13 +49,17 @@ public class GameServiceImpl implements GameService {
 
       boolean isFinished = gameIsFinished(gameState, activePlayer);
       if (isFinished) {
+        Game.Winner winner = getWinner(gameState);
+        game.setWinner(winner);
         game.setFinished(true);
-        game.setWinner(getWinner(gameState));
+        log.info("Game '{}' finished. Winner is the {} player.", gameId, winner);
       }
 
       game.setActivePlayer(activePlayerMapper.asEnum(nextActivePlayer));
       gameRepository.save(game);
     }
+
+    log.debug("Next game state: {}", game);
     return gameMapper.gameToGameDto(game);
   }
 

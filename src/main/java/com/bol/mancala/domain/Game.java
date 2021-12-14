@@ -17,6 +17,7 @@ import static com.bol.mancala.domain.Board.BOARD_SIZE_Y;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 @Entity
 public class Game {
