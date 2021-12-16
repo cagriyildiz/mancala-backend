@@ -31,8 +31,8 @@ code {
     transition: transform 3s ease 0s;
   }
 
-  [data-player="two"] &,
-  [data-player="two"] & p {
+  [data-player="1"] &,
+  [data-player="1"] & p {
     transform: rotate(180deg);
   }
 }
@@ -80,17 +80,17 @@ code {
   border-radius: 40%;
 }
 
-[data-player="two"] .row.player-1 .pit,
-[data-player="one"] .row.player-0 .pit {
+[data-player="1"] .row.player-1 .pit,
+[data-player="0"] .row.player-0 .pit {
   cursor: pointer;
 }
 
-[data-player="two"] .status,
+[data-player="1"] .status,
 .big-pit.player-1, .player-1 .pit {
   color: green;
 }
 
-[data-player="one"] .status,
+[data-player="0"] .status,
 .big-pit.player-0, .player-0 .pit {
   color: #0074D9;
 }

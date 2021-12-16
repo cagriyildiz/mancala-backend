@@ -8,6 +8,7 @@ function App() {
   const createGameEndpoint = 'http://localhost:8080/api/v1/game/create/';
 
   const [playing, setPlaying] = useState(false);
+  const [activePlayer, setActivePlayer] = useState(0);
   const [gameState, setGameState] = useState([[6, 6, 6, 6, 6, 6, 0], [6, 6, 6, 6, 6, 6, 0]]);
 
   const getDefaultRequestPayload = () => {
@@ -20,6 +21,7 @@ function App() {
   const startGame = () => {
     axios.post(createGameEndpoint, getDefaultRequestPayload())
       .then(response => {
+        setActivePlayer(response.data.activePlayer);
         setGameState(response.data.board.pits);
       }).catch(error => {
       console.error(error);
@@ -28,7 +30,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div data-player={activePlayer} className="App">
       <header className="App-header">
         <p className="App-start" onClick={startGame}>
           Play Mancala
