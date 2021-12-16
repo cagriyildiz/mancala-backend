@@ -11,16 +11,17 @@ const Board = (props) => {
   const playerTwoPits = playerTwoState.slice(0, -1);
 
   return (
-    <div className="board">
-      <BigPit store={playerTwoState.at(-1)} player={1} />
+    props.show ?
+      <div className="board">
+        <BigPit store={playerTwoState.at(-1)} player={1}/>
 
-      <div className="rows">
-        <Pits pits={playerTwoPits} player={1} />
-        <Pits pits={playerOnePits} player={0} />
-      </div>
+        <div className="rows">
+          <Pits pits={playerTwoPits} player={1}/>
+          <Pits pits={playerOnePits} player={0}/>
+        </div>
 
-      <BigPit store={playerOneState.at(-1)} player={0} />
-    </div>
+        <BigPit store={playerOneState.at(-1)} player={0}/>
+      </div> : null
   );
 };
 
