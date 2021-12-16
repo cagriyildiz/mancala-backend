@@ -25,16 +25,6 @@ code {
   overflow-x: auto;
 
   border-radius: 20px;
-
-  &, p {
-    transform: rotate(0deg);
-    transition: transform 3s ease 0s;
-  }
-
-  [data-player="1"] &,
-  [data-player="1"] & p {
-    transform: rotate(180deg);
-  }
 }
 
 .rows {

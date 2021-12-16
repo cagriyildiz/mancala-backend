@@ -16,8 +16,8 @@ const Board = (props) => {
         <BigPit store={playerTwoState.at(-1)} player={1}/>
 
         <div className="rows">
-          <Pits pits={playerTwoPits} player={1}/>
-          <Pits pits={playerOnePits} player={0}/>
+          <Pits pits={playerTwoPits} player={1} moveStones={props.moveStones}/>
+          <Pits pits={playerOnePits} player={0} moveStones={props.moveStones}/>
         </div>
 
         <BigPit store={playerOneState.at(-1)} player={0}/>
