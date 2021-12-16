@@ -85,6 +85,10 @@ code {
   color: #0074D9;
 }
 
+.pit[data-disabled="true"] {
+  cursor: not-allowed;
+}
+
 button {
   cursor: pointer;
   padding: 7px 13px;

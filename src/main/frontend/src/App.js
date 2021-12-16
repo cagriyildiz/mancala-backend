@@ -51,7 +51,10 @@ function App() {
         <p className="App-start" onClick={startGame}>
           Play Mancala
         </p>
-        <Board show={playing} pits={gameState} moveStones={moveStonesHandler}/>
+        <Board show={playing}
+               pits={gameState}
+               activePlayer={activePlayer}
+               moveStones={moveStonesHandler}/>
       </header>
     </div>
   );

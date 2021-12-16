@@ -19,6 +19,7 @@ const Board = (props) => {
                 <Pits key={idx}
                       pits={state.slice(0, -1)}
                       player={props.pits.length - 1 - idx}
+                      activePlayer={props.activePlayer}
                       moveStones={props.moveStones}/>)
           }
         </div>

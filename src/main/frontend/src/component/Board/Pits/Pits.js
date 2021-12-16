@@ -8,6 +8,7 @@ const Pits = (props) => {
         props.pits.map((stones, idx) =>
           <Pit key={`${props.player}-${idx}`}
                index={idx}
+               isActive={props.activePlayer === props.player}
                stones={stones}
                clicked={props.moveStones}/>)
       }
