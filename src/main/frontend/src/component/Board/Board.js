@@ -4,23 +4,26 @@ import BigPit from "./Pits/Pit/BigPit";
 
 const Board = (props) => {
 
-  const playerOneState = props.pits[0];
-  const playerTwoState = props.pits[1];
-
-  const playerOnePits = playerOneState.slice(0, -1);
-  const playerTwoPits = playerTwoState.slice(0, -1);
+  const reverseArray = arr => arr.slice(0).reverse();
+  const stonesInBigPit = player => props.pits[player].at(-1);
 
   return (
     props.show ?
       <div className="board">
-        <BigPit store={playerTwoState.at(-1)} player={1}/>
+        <BigPit store={stonesInBigPit(1)} player={1}/>
 
         <div className="rows">
-          <Pits pits={playerTwoPits} player={1} moveStones={props.moveStones}/>
-          <Pits pits={playerOnePits} player={0} moveStones={props.moveStones}/>
+          {
+            reverseArray(props.pits)
+              .map((state, idx) =>
+                <Pits key={idx}
+                      pits={state.slice(0, -1)}
+                      player={props.pits.length - 1 - idx}
+                      moveStones={props.moveStones}/>)
+          }
         </div>
 
-        <BigPit store={playerOneState.at(-1)} player={0}/>
+        <BigPit store={stonesInBigPit(0)} player={0}/>
       </div> : null
   );
 };
