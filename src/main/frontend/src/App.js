@@ -31,19 +31,21 @@ function App() {
       .then(response => {
         gameId.current = response.data.id;
         setNextGameState(response);
-      }).catch(error => {
-      console.error(error);
-    });
-    setPlaying(true);
+        setPlaying(true);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const moveStonesHandler = (pit) => {
     axios.get(`${playGameEndpoint}${gameId.current}?pit=${pit}`)
       .then(response => {
         setNextGameState(response);
-      }).catch(error => {
+      })
+      .catch(error => {
         console.error(error);
-    });
+      });
   };
 
   return (
