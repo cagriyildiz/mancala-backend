@@ -16,3 +16,7 @@
 .App-link {
   color: #61dafb;
 }
+
+.App-start {
+  cursor: pointer;
+}

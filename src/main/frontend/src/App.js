@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>
+        <p className="App-start">
           Play Mancala
         </p>
         <Board pits={[[6, 6, 6, 6, 6, 6, 0], [6, 6, 6, 6, 6, 6, 0]]}/>
