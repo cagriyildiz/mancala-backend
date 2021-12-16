@@ -20,3 +20,12 @@
 .App-start {
   cursor: pointer;
 }
+
+.App-user {
+  margin: 0;
+  font-size: calc(2vmin);
+
+  &.active {
+    color: #61dafb;
+  }
+}

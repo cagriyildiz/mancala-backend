@@ -1,7 +1,8 @@
 import {useRef, useState} from "react";
 import axios from "axios";
-import './App.css';
+import './App.scss';
 import Board from "./component/Board/Board";
+import User from "./component/User/User";
 
 function App() {
 
@@ -51,10 +52,12 @@ function App() {
         <p className="App-start" onClick={startGame}>
           Play Mancala
         </p>
+        <User playing={playing} user={1} isActive={activePlayer === 1}/>
         <Board show={playing}
                pits={gameState}
                activePlayer={activePlayer}
                moveStones={moveStonesHandler}/>
+        <User playing={playing} user={0} isActive={activePlayer === 0}/>
       </header>
     </div>
   );
