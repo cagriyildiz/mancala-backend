@@ -75,11 +75,13 @@ code {
   cursor: pointer;
 }
 
+[data-player="1"].winner,
 [data-player="1"] .status,
 .big-pit.player-1, .player-1 .pit {
   color: green;
 }
 
+[data-player="0"].winner,
 [data-player="0"] .status,
 .big-pit.player-0, .player-0 .pit {
   color: #0074D9;

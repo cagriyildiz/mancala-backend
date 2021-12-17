@@ -3,6 +3,7 @@ import axios from "axios";
 import './App.scss';
 import Board from "./component/Board/Board";
 import User from "./component/User/User";
+import Winner from "./component/Winner/Winner";
 
 function App() {
 
@@ -11,6 +12,8 @@ function App() {
   const playGameEndpoint = 'http://localhost:8080/api/v1/game/play/';
 
   const [playing, setPlaying] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [winner, setWinner] = useState(-1);
   const [activePlayer, setActivePlayer] = useState(0);
   const [gameState, setGameState] = useState([[6, 6, 6, 6, 6, 6, 0], [6, 6, 6, 6, 6, 6, 0]]);
 
@@ -27,6 +30,8 @@ function App() {
   }
 
   const startGame = () => {
+    setFinished(false);
+    setWinner(-1);
     axios.post(createGameEndpoint, getDefaultRequestPayload())
       .then(response => {
         gameId.current = response.data.id;
@@ -38,10 +43,18 @@ function App() {
       });
   };
 
+  const gameIsFinished = (response) => {
+    if (response.data.finished) {
+      setFinished(response.data.finished);
+      setWinner(response.data.winner);
+    }
+  };
+
   const moveStonesHandler = (pit) => {
     axios.get(`${playGameEndpoint}${gameId.current}?pit=${pit}`)
       .then(response => {
         setNextGameState(response);
+        gameIsFinished(response);
       })
       .catch(error => {
         console.error(error);
@@ -60,6 +73,7 @@ function App() {
                activePlayer={activePlayer}
                moveStones={moveStonesHandler}/>
         <User playing={playing} user={0} isActive={activePlayer === 0}/>
+        <Winner finished={finished} winner={winner}/>
       </header>
     </div>
   );
