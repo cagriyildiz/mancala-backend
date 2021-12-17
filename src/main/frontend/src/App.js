@@ -4,6 +4,7 @@ import './App.scss';
 import Board from "./component/Board/Board";
 import User from "./component/User/User";
 import Winner from "./component/Winner/Winner";
+import Button from "./component/Button/Button";
 
 function App() {
 
@@ -64,9 +65,7 @@ function App() {
   return (
     <div data-player={activePlayer} className="App">
       <header className="App-header">
-        <p className="App-start" onClick={startGame}>
-          Play Mancala
-        </p>
+        <Button text="Play Mancala" clicked={startGame}/>
         <User playing={playing} user={1} isActive={activePlayer === 1}/>
         <Board show={playing}
                pits={gameState}
