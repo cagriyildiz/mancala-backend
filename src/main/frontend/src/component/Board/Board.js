@@ -1,6 +1,7 @@
 import React from "react";
 import Pits from "./Pits/Pits";
 import BigPit from "./Pits/Pit/BigPit";
+import {UserEnum} from "../User/constant";
 
 const Board = (props) => {
 
@@ -10,7 +11,7 @@ const Board = (props) => {
   return (
     props.show ?
       <div className="board">
-        <BigPit store={stonesInBigPit(1)} player={1}/>
+        <BigPit store={stonesInBigPit(UserEnum.SECOND)} player={UserEnum.SECOND}/>
 
         <div className="rows">
           {
@@ -24,7 +25,7 @@ const Board = (props) => {
           }
         </div>
 
-        <BigPit store={stonesInBigPit(0)} player={0}/>
+        <BigPit store={stonesInBigPit(UserEnum.FIRST)} player={UserEnum.FIRST}/>
       </div> : null
   );
 };

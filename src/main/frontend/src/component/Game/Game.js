@@ -4,18 +4,18 @@ import Button from "../Button/Button";
 import User from "../User/User";
 import Board from "../Board/Board";
 import Winner from "../Winner/Winner";
+import {ENDPOINT_CREATE_GAME, ENDPOINT_PLAY_GAME} from "./constant";
+import {UserEnum} from "../User/constant";
 
 const Game = () => {
 
   const gameId = useRef();
-  const createGameEndpoint = 'http://localhost:8080/api/v1/game/create/';
-  const playGameEndpoint = 'http://localhost:8080/api/v1/game/play/';
 
   const [playing, setPlaying] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [winner, setWinner] = useState(-1);
-  const [activePlayer, setActivePlayer] = useState(0);
-  const [gameState, setGameState] = useState([[6, 6, 6, 6, 6, 6, 0], [6, 6, 6, 6, 6, 6, 0]]);
+  const [winner, setWinner] = useState(Winner.TIE);
+  const [activePlayer, setActivePlayer] = useState(UserEnum.FIRST);
+  const [gameState, setGameState] = useState();
 
   const getDefaultRequestPayload = () => {
     return {
@@ -31,8 +31,8 @@ const Game = () => {
 
   const startGame = () => {
     setFinished(false);
-    setWinner(-1);
-    axios.post(createGameEndpoint, getDefaultRequestPayload())
+    setWinner(Winner.TIE);
+    axios.post(ENDPOINT_CREATE_GAME, getDefaultRequestPayload())
       .then(response => {
         gameId.current = response.data.id;
         setNextGameState(response);
@@ -51,7 +51,7 @@ const Game = () => {
   };
 
   const moveStonesHandler = (pit) => {
-    axios.get(`${playGameEndpoint}${gameId.current}?pit=${pit}`)
+    axios.get(`${ENDPOINT_PLAY_GAME}${gameId.current}?pit=${pit}`)
       .then(response => {
         setNextGameState(response);
         gameIsFinished(response);
@@ -65,12 +65,12 @@ const Game = () => {
     <div data-player={activePlayer} className="App">
       <header className="App-header">
         <Button text="Play Mancala" clicked={startGame}/>
-        <User playing={playing} user={1} isActive={activePlayer === 1}/>
+        <User playing={playing} user={UserEnum.SECOND} isActive={activePlayer === UserEnum.SECOND}/>
         <Board show={playing}
                pits={gameState}
                activePlayer={activePlayer}
                moveStones={moveStonesHandler}/>
-        <User playing={playing} user={0} isActive={activePlayer === 0}/>
+        <User playing={playing} user={UserEnum.FIRST} isActive={activePlayer === UserEnum.FIRST}/>
         <Winner finished={finished} winner={winner}/>
       </header>
     </div>

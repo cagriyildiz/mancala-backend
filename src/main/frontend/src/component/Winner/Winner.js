@@ -1,11 +1,12 @@
 import React from "react";
+import {WinnerEnum} from "./constant";
 
 const Winner = (props) => {
 
   const getWinnerText = () => {
     switch (props.winner) {
-      case 0:
-      case 1:
+      case WinnerEnum.FIRST:
+      case WinnerEnum.SECOND:
         return `User ${props.winner + 1} Wins`;
       default:
         return "Tie Game";
