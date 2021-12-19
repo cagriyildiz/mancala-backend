@@ -17,12 +17,12 @@ Since game state changes after every turn it is appropriate to use a framework l
 
 ## Installation
 In order to run the backend application at least JDK 11 is required. For the frontend, make sure to use the latest version of Node to get better performance.
-To start up the application on your local machine, select **"local"** maven profile and click run on your IDE.
-Alternatively, you can achieve the same by executing this maven goal **"mvn spring-boot:run -Plocal"**.
-After Spring Boot application starts, you need to start up the React application by simply running **"npm start"** under ***"/src/main/frontend"*** directory. 
+To start up the application on your local machine, select ```local``` maven profile and run ```mvn:clean install```.
+After build success click run on your IDE.  Alternatively, you can achieve the same by executing this maven goal ```mvn spring-boot:run -Plocal```.
+After Spring Boot application starts, you need to start up the React application by simply running ```npm start``` under ```/src/main/frontend``` directory. 
 
 In local environments, backend is accessible only from the origin ```http://localhost:3000``` which is the default local address for React applications. 
-If you want to change this default behaviour you need to modify the property *bol.com.mancala.cors.allowed-origins* in the [application-local.yaml](./src/main/resources/application-local.yaml) file.
+If you want to change this default behaviour you need to modify the property ```bol.com.mancala.cors.allowed-origins``` in the [application-local.yaml](./src/main/resources/application-local.yaml) file.
 
 ---
 ### Docker Support
@@ -72,7 +72,7 @@ After both backend and frontend run successfully, you can play the game by openi
     }
 }
 ```
-### Creating New Game Session ```GET /api/v1/game/play/{gameId}?pit={index}```
+### Moving Stones ```GET /api/v1/game/play/{gameId}?pit={index}```
 #### Response Body
 ```
 {
@@ -95,7 +95,6 @@ After both backend and frontend run successfully, you can play the game by openi
     }
 }
 ```
-
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
