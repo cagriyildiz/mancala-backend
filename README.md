@@ -24,6 +24,21 @@ After Spring Boot application starts, you need to start up the React application
 In local environments, backend is accessible only from the origin ```http://localhost:3000``` which is the default local address for React applications. 
 If you want to change this default behaviour you need to modify the property *bol.com.mancala.cors.allowed-origins* in the [application-local.yaml](./src/main/resources/application-local.yaml) file.
 
+---
+### Docker Support
+To start up the application, run ```mvn clean instal``` first and do following:
+```
+# set the environment variable beforehand
+export SPRING_PROFILES_ACTIVE=local (Linux and Mac)
+$env:SPRING_PROFILES_ACTIVE='local' (Windows)
+
+# build and run the containers in the background
+docker-compose up -d --build
+```
+---
+
+After both backend and frontend run successfully, you can play the game by opening [localhost](http://localhost:3000) in your browser.
+
 ## Usage
 ### Creating New Game Session ```POST /api/v1/game/create```
 #### Request Body
