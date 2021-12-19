@@ -3,7 +3,7 @@ import React from "react";
 const Pit = (props) => {
 
   const moveStones = (event) => {
-    const stoneCount = event.target.innerText;
+    const stoneCount = event.target.textContent;
     let disabled = event.target.dataset.disabled;
     if (!disabled && stoneCount) {
       props.clicked(event.target.dataset.index);

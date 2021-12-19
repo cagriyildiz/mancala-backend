@@ -6,7 +6,6 @@ const Button = (props) => {
       {props.text}
     </p>
   );
-
 };
 
 export default Button;

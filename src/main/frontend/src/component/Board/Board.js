@@ -6,7 +6,8 @@ import {UserEnum} from "../User/constant";
 const Board = (props) => {
 
   const reverseArray = arr => arr.slice(0).reverse();
-  const stonesInBigPit = player => props.pits[player].at(-1);
+  const getLastElement = arr => arr[arr.length - 1];
+  const stonesInBigPit = player => getLastElement(props.pits[player]);
 
   return (
     props.show ?
