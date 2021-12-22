@@ -120,8 +120,14 @@ public class GameServiceImpl implements GameService {
   }
 
   private boolean gameIsFinished(int[][] gameState, int activePlayer) {
-    if (pitsAreEmpty(gameState[activePlayer])) {
-      int oppositeSide = nextSide(activePlayer);
+    int playerWithEmptyPits = -1;
+    if (pitsAreEmpty(gameState[activePlayer])) { // current player has no stones in his side
+      playerWithEmptyPits = activePlayer;
+    } else if (pitsAreEmpty(gameState[nextSide(activePlayer)])) { // opponent has no stones in his side
+      playerWithEmptyPits = nextSide(activePlayer);
+    }
+    if (playerWithEmptyPits > -1) { // game is finished
+      int oppositeSide = nextSide(playerWithEmptyPits);
       collectRemainderStones(gameState[oppositeSide]);
       return true;
     }

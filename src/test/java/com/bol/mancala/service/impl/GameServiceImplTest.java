@@ -206,6 +206,30 @@ class GameServiceImplTest {
     assertEquals(Game.Winner.SECOND, game.getWinner());
   }
 
+  @DisplayName("Play Game - Second Player Wins")
+  @Test
+  void playGameOppositeSideIsEmptyWhenCurrentPlayerMoves() {
+    final int startingPit = 0;
+    final int[][] actualPits = new int[][]{
+        {1, 0, 0, 0, 0, 0, 32},
+        {5, 0, 0, 0, 0, 0, 34}
+    };
+    final int[][] expectedPits = new int[][]{
+        {0, 0, 0, 0, 0, 0, 32},
+        {0, 0, 0, 0, 0, 0, 40}
+    };
+
+    Game game = Game.builder()
+        .activePlayer(Game.PlayerOrder.SECOND)
+        .board(Board.builder().pits(actualPits).build())
+        .build();
+
+    verifyPlayGame(false, startingPit, expectedPits, game);
+
+    assertTrue(game.isFinished());
+    assertEquals(Game.Winner.SECOND, game.getWinner());
+  }
+
   @DisplayName("Play Game - The End Tie Game")
   @Test
   void playGameTheEndTieGame() {
