@@ -7,7 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.bol.mancala.domain.Board.BOARD_SIZE_X;
@@ -93,14 +94,36 @@ public class Game {
 
   private void initializeBoard() {
     if (board == null) {
-      int[][] pits = new int[BOARD_SIZE_Y][BOARD_SIZE_X];
-      for (int[] row : pits) {
-        Arrays.fill(row, 0, BOARD_SIZE_X - 1, initialStoneCount);
-      }
       board = Board.builder()
-          .pits(pits)
+          .state(initializeGameState())
           .build();
     }
+  }
+
+  private List<State> initializeGameState() {
+    List<State> state = new ArrayList<>();
+    for (int i = 0; i < BOARD_SIZE_Y; i++) {
+      state.add(createNewGameState());
+    }
+    return state;
+  }
+
+  private State createNewGameState() {
+    List<Pit> pits = new ArrayList<>(BOARD_SIZE_X);
+    for (int i = 0; i < BOARD_SIZE_X - 1; i++) {
+      Pit pit = createPit(Pit.Type.LITTLE, initialStoneCount);
+      pits.add(pit);
+    }
+    Pit pit = createPit(Pit.Type.BIG, 0);
+    pits.add(pit);
+    return State.builder().pits(pits).build();
+  }
+
+  private Pit createPit(Pit.Type type, int stoneCount) {
+    return Pit.builder()
+        .type(type)
+        .stoneCount(stoneCount)
+        .build();
   }
 
 }

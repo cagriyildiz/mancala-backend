@@ -9,7 +9,7 @@ import static com.bol.mancala.domain.Game.PlayerOrder.FIRST;
 import static com.bol.mancala.domain.Game.PlayerOrder.SECOND;
 import static com.bol.mancala.web.mapper.impl.WinnerMapperTest.FIRST_PLAYER;
 import static com.bol.mancala.web.mapper.impl.WinnerMapperTest.SECOND_PLAYER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Test Active Player Mapper")
 class ActivePlayerMapperTest {

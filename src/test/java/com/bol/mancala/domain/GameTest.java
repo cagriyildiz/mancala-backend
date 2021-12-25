@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.stream.IntStream;
+import java.util.List;
 
 import static com.bol.mancala.domain.Board.BOARD_SIZE_X;
 import static com.bol.mancala.domain.Board.BOARD_SIZE_Y;
@@ -93,39 +93,63 @@ class GameTest {
 
   private void verifyDefaultBoard(Game game) {
     Board board = game.getBoard();
-    int[][] pits = board.getPits();
-    assertEquals(BOARD_SIZE_Y, pits.length);
-    assertEquals(BOARD_SIZE_X, pits[0].length);
-    verifyPits(pits, game.getInitialStoneCount());
+    List<State> gameState = board.getState();
+    assertNotNull(gameState);
+    assertEquals(BOARD_SIZE_Y, gameState.size());
+    assertEquals(BOARD_SIZE_X, gameState.get(0).getPits().size());
+    verifyGameState(gameState, game.getInitialStoneCount());
   }
 
-  private void verifyPits(int[][] pits, int initialStoneCount) {
-    int[][] expectedPits = getExpectedPits(initialStoneCount);
-    IntStream expectedPitsStream = Arrays.stream(expectedPits).flatMapToInt(Arrays::stream);
-    IntStream actualPitsStream = Arrays.stream(pits).flatMapToInt(Arrays::stream);
-    isStreamsEqual(expectedPitsStream, actualPitsStream);
+  private void verifyGameState(List<State> state, int initialStoneCount) {
+    List<State> expectedGameState = getExpectedGameState(initialStoneCount);
+    isPitsAreEqual(expectedGameState.get(0).getPits(), state.get(0).getPits());
+    isPitsAreEqual(expectedGameState.get(1).getPits(), state.get(1).getPits());
   }
 
-  private void isStreamsEqual(IntStream stream1, IntStream stream2) {
-    Iterator<Integer> iterator1 = stream1.iterator();
-    Iterator<Integer> iterator2 = stream2.iterator();
+  private void isPitsAreEqual(List<Pit> expected, List<Pit> actual) {
+    assertEquals(expected.size(), actual.size());
+    assertEquals(expected.size(), actual.size());
+
+    Iterator<Pit> iteratorExpected = expected.iterator();
+    Iterator<Pit> iteratorActual = actual.iterator();
 
     // check every value is equal in both collection
-    while (iterator1.hasNext() && iterator2.hasNext()) {
-      assertEquals(iterator1.next(), iterator2.next());
+    while (iteratorExpected.hasNext() && iteratorActual.hasNext()) {
+      Pit pitExpected = iteratorExpected.next();
+      Pit pitActual = iteratorActual.next();
+      assertEquals(pitExpected.getType(), pitActual.getType());
+      assertEquals(pitExpected.getStoneCount(), pitActual.getStoneCount());
     }
 
     // check if no other value is left in both collection
-    assertFalse(iterator1.hasNext());
-    assertFalse(iterator2.hasNext());
+    assertFalse(iteratorExpected.hasNext());
+    assertFalse(iteratorActual.hasNext());
   }
 
-  private int[][] getExpectedPits(int initialStoneCount) {
-    int[][] expectedPits = new int[BOARD_SIZE_Y][BOARD_SIZE_X];
+  private List<State> getExpectedGameState(int initialStoneCount) {
+    List<State> state = new ArrayList<>();
     for (int i = 0; i < BOARD_SIZE_Y; i++) {
-      Arrays.fill(expectedPits[i], 0, BOARD_SIZE_X - 1, initialStoneCount);
+      state.add(createNewGameState(initialStoneCount));
     }
-    return expectedPits;
+    return state;
+  }
+
+  private State createNewGameState(int initialStoneCount) {
+    List<Pit> pits = new ArrayList<>(BOARD_SIZE_X);
+    for (int i = 0; i < BOARD_SIZE_X - 1; i++) {
+      Pit pit = createPit(Pit.Type.LITTLE, initialStoneCount);
+      pits.add(pit);
+    }
+    Pit pit = createPit(Pit.Type.BIG, 0);
+    pits.add(pit);
+    return State.builder().pits(pits).build();
+  }
+
+  private Pit createPit(Pit.Type type, int stoneCount) {
+    return Pit.builder()
+        .type(type)
+        .stoneCount(stoneCount)
+        .build();
   }
 
 }

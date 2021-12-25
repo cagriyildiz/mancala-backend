@@ -2,12 +2,16 @@ package com.bol.mancala.service.impl;
 
 import com.bol.mancala.domain.Board;
 import com.bol.mancala.domain.Game;
+import com.bol.mancala.domain.Pit;
+import com.bol.mancala.domain.State;
 import com.bol.mancala.repository.GameRepository;
 import com.bol.mancala.service.GameService;
 import com.bol.mancala.web.mapper.GameMapper;
 import com.bol.mancala.web.mapper.impl.ActivePlayerMapper;
-import com.bol.mancala.web.model.BoardDto;
+import com.bol.mancala.web.mapper.impl.PitTypeMapper;
 import com.bol.mancala.web.model.GameDto;
+import com.bol.mancala.web.model.PitDto;
+import com.bol.mancala.web.model.StateDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import static com.bol.mancala.domain.Game.MIN_INITIAL_STONE_COUNT;
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,7 +87,7 @@ class GameServiceImplTest {
         .board(createDefaultBoard())
         .build();
 
-    verifyPlayGame(true, startingPit, expectedPits, game);
+    verifyPlayGame(true, startingPit, createGameStateAsDto(expectedPits), game);
   }
 
   @DisplayName("Play Game - Start From Arbitrarily Chosen Stone")
@@ -100,7 +104,7 @@ class GameServiceImplTest {
         .board(createDefaultBoard())
         .build();
 
-    verifyPlayGame(false, startingPit, expectedPits, game);
+    verifyPlayGame(false, startingPit, createGameStateAsDto(expectedPits), game);
   }
 
   @DisplayName("Play Game - Last Stone Goes To The Same Side Of The Board")
@@ -117,7 +121,7 @@ class GameServiceImplTest {
         .board(createSpecialBoard())
         .build();
 
-    verifyPlayGame(false, startingPit, expectedPits, game);
+    verifyPlayGame(false, startingPit, createGameStateAsDto(expectedPits), game);
   }
 
   @DisplayName("Play Game - Start From Empty Pit")
@@ -134,7 +138,7 @@ class GameServiceImplTest {
         .board(createSpecialBoard())
         .build();
 
-    verifyPlayGame(true, startingPit, expectedPits, game);
+    verifyPlayGame(true, startingPit, createGameStateAsDto(expectedPits), game);
   }
 
   @DisplayName("Play Game - Capture Stones")
@@ -152,10 +156,10 @@ class GameServiceImplTest {
 
     Game game = Game.builder()
         .activePlayer(Game.PlayerOrder.SECOND)
-        .board(Board.builder().pits(actualPits).build())
+        .board(Board.builder().state(createGameState(actualPits)).build())
         .build();
 
-    verifyPlayGame(false, startingPit, expectedPits, game);
+    verifyPlayGame(false, startingPit, createGameStateAsDto(expectedPits), game);
   }
 
   @DisplayName("Play Game - First Player Wins")
@@ -173,10 +177,10 @@ class GameServiceImplTest {
 
     Game game = Game.builder()
         .activePlayer(Game.PlayerOrder.FIRST)
-        .board(Board.builder().pits(actualPits).build())
+        .board(Board.builder().state(createGameState(actualPits)).build())
         .build();
 
-    verifyPlayGame(true, startingPit, expectedPits, game);
+    verifyPlayGame(true, startingPit, createGameStateAsDto(expectedPits), game);
 
     assertTrue(game.isFinished());
     assertEquals(Game.Winner.FIRST, game.getWinner());
@@ -197,10 +201,10 @@ class GameServiceImplTest {
 
     Game game = Game.builder()
         .activePlayer(Game.PlayerOrder.FIRST)
-        .board(Board.builder().pits(actualPits).build())
+        .board(Board.builder().state(createGameState(actualPits)).build())
         .build();
 
-    verifyPlayGame(false, startingPit, expectedPits, game);
+    verifyPlayGame(false, startingPit, createGameStateAsDto(expectedPits), game);
 
     assertTrue(game.isFinished());
     assertEquals(Game.Winner.SECOND, game.getWinner());
@@ -221,10 +225,10 @@ class GameServiceImplTest {
 
     Game game = Game.builder()
         .activePlayer(Game.PlayerOrder.SECOND)
-        .board(Board.builder().pits(actualPits).build())
+        .board(Board.builder().state(createGameState(actualPits)).build())
         .build();
 
-    verifyPlayGame(false, startingPit, expectedPits, game);
+    verifyPlayGame(false, startingPit, createGameStateAsDto(expectedPits), game);
 
     assertTrue(game.isFinished());
     assertEquals(Game.Winner.SECOND, game.getWinner());
@@ -245,16 +249,16 @@ class GameServiceImplTest {
 
     Game game = Game.builder()
         .activePlayer(Game.PlayerOrder.FIRST)
-        .board(Board.builder().pits(actualPits).build())
+        .board(Board.builder().state(createGameState(actualPits)).build())
         .build();
 
-    verifyPlayGame(false, startingPit, expectedPits, game);
+    verifyPlayGame(false, startingPit, createGameStateAsDto(expectedPits), game);
 
     assertTrue(game.isFinished());
     assertEquals(Game.Winner.TIE, game.getWinner());
   }
 
-  private void verifyPlayGame(boolean nextPlayerIsSame, int startingPit, int[][] expectedPits, Game game) {
+  private void verifyPlayGame(boolean nextPlayerIsSame, int startingPit, List<StateDto> expectedGameState, Game game) {
     given(gameRepository.getById(any())).willReturn(game);
 
     int activePlayer = activePlayerMapper.asInteger(game.getActivePlayer());
@@ -269,28 +273,32 @@ class GameServiceImplTest {
       assertNotEquals(activePlayer, nextActivePlayer);
     }
 
-    verifyBoard(newGameState.getBoard(), expectedPits);
+    verifyGameState(newGameState.getBoard().getState(), expectedGameState);
   }
 
-  private void verifyBoard(BoardDto board, int[][] expectedPits) {
-    int[][] pits = board.getPits();
-    IntStream expectedPitsStream = Arrays.stream(expectedPits).flatMapToInt(Arrays::stream);
-    IntStream actualPitsStream = Arrays.stream(pits).flatMapToInt(Arrays::stream);
-    isStreamsEqual(expectedPitsStream, actualPitsStream);
+  private void verifyGameState(List<StateDto> actualGameState, List<StateDto> expectedGameState) {
+    isPitsAreEqual(expectedGameState.get(0).getPits(), actualGameState.get(0).getPits());
+    isPitsAreEqual(expectedGameState.get(1).getPits(), actualGameState.get(1).getPits());
   }
 
-  private void isStreamsEqual(IntStream stream1, IntStream stream2) {
-    Iterator<Integer> iterator1 = stream1.iterator();
-    Iterator<Integer> iterator2 = stream2.iterator();
+  private void isPitsAreEqual(List<PitDto> expected, List<PitDto> actual) {
+    assertEquals(expected.size(), actual.size());
+    assertEquals(expected.size(), actual.size());
+
+    Iterator<PitDto> iteratorExpected = expected.iterator();
+    Iterator<PitDto> iteratorActual = actual.iterator();
 
     // check every value is equal in both collection
-    while (iterator1.hasNext() && iterator2.hasNext()) {
-      assertEquals(iterator1.next(), iterator2.next());
+    while (iteratorExpected.hasNext() && iteratorActual.hasNext()) {
+      PitDto pitExpected = iteratorExpected.next();
+      PitDto pitActual = iteratorActual.next();
+      assertEquals(pitExpected.getType(), pitActual.getType());
+      assertEquals(pitExpected.getStoneCount(), pitActual.getStoneCount());
     }
 
     // check if no other value is left in both collection
-    assertFalse(iterator1.hasNext());
-    assertFalse(iterator2.hasNext());
+    assertFalse(iteratorExpected.hasNext());
+    assertFalse(iteratorActual.hasNext());
   }
 
   private void verifyAutoGeneratedFields(GameDto newGame) {
@@ -300,13 +308,50 @@ class GameServiceImplTest {
     assertNotNull(newGame.getLastModifiedDate());
   }
 
+  private List<StateDto> createGameStateAsDto(int[][] sourceState) {
+    PitTypeMapper pitTypeMapper = new PitTypeMapper();
+    List<StateDto> resultState = new ArrayList<>();
+    for (int[] side : sourceState) {
+      StateDto state = new StateDto();
+      List<PitDto> pits = new ArrayList<>();
+      for (int i = 0; i < side.length; i++) {
+        int type = pitTypeMapper.asInteger(Pit.Type.LITTLE);
+        if (i == side.length - 1) {
+          type = pitTypeMapper.asInteger(Pit.Type.BIG);
+        }
+        pits.add(PitDto.builder().type(type).stoneCount(side[i]).build());
+      }
+      state.setPits(pits);
+      resultState.add(state);
+    }
+    return resultState;
+  }
+
+  private List<State> createGameState(int[][] sourceState) {
+    List<State> resultState = new ArrayList<>();
+    for (int[] side : sourceState) {
+      State state = new State();
+      List<Pit> pits = new ArrayList<>();
+      for (int i = 0; i < side.length; i++) {
+        Pit.Type type = Pit.Type.LITTLE;
+        if (i == side.length - 1) {
+          type = Pit.Type.BIG;
+        }
+        pits.add(Pit.builder().type(type).stoneCount(side[i]).build());
+      }
+      state.setPits(pits);
+      resultState.add(state);
+    }
+    return resultState;
+  }
+
   private Board createDefaultBoard() {
     int[][] pits = new int[][]{
         {6, 6, 6, 6, 6, 6, 0},
         {6, 6, 6, 6, 6, 6, 0}
     };
     return Board.builder()
-        .pits(pits)
+        .state(createGameState(pits))
         .build();
   }
 
@@ -316,7 +361,7 @@ class GameServiceImplTest {
         {8, 1, 7, 7, 7, 7, 1}
     };
     return Board.builder()
-        .pits(pits)
+        .state(createGameState(pits))
         .build();
   }
 

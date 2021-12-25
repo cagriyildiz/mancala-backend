@@ -13,25 +13,20 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Board {
-
-  @Transient
-  public static final int BOARD_SIZE_X = 7;
-
-  @Transient
-  public static final int BOARD_SIZE_Y = 2;
+public class State {
 
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
   @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
-  private UUID id;
+  private UUID id; // UUID is used because game ids must be unique for every game session in the central database
 
-  @OneToOne(mappedBy = "board")
-  private Game game;
+  @ElementCollection
+  private List<Pit> pits;
 
-  @OneToMany(cascade = CascadeType.ALL)
-  @CollectionTable(name = "board_state", joinColumns = @JoinColumn(name = "side_id"))
-  private List<State> state;
+  @Transient
+  public Pit getBigPit() {
+    return pits.get(pits.size() - 1);
+  }
 
 }

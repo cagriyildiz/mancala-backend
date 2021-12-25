@@ -9,8 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static com.bol.mancala.domain.GameTest.FIRST_PLAYER_ID;
 import static com.bol.mancala.domain.GameTest.SECOND_PLAYER_ID;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Test Board JPA Entity")
 @DataJpaTest
@@ -36,7 +35,12 @@ class BoardTest {
     Board board = newGame.getBoard();
     assertNotNull(board);
     assertNotNull(board.getId());
-    assertNotNull(board.getPits());
+    assertNotNull(board.getState());
+    assertEquals(2, board.getState().size());
+    assertNotNull(board.getState().get(0));
+    assertNotNull(board.getState().get(0).getPits());
+    assertNotNull(board.getState().get(1));
+    assertNotNull(board.getState().get(1).getPits());
     assertNull(board.getGame()); // since game field in Board class is needed only for reference
   }
 

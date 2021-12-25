@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BoardDto {
+public class PitDto {
 
-  private UUID id;
+  private int type;
 
-  private List<StateDto> state;
+  private int stoneCount;
 
 }
