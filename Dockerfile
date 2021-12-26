@@ -5,7 +5,7 @@ FROM openjdk:11-jre
 WORKDIR /app
 
 # Move compiled jar file to the app folder
-COPY target/mancala-0.0.1-SNAPSHOT.jar ./
+COPY target/mancala-backend-0.0.1-SNAPSHOT.jar ./
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "mancala-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "mancala-backend-0.0.1-SNAPSHOT.jar"]
