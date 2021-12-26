@@ -11,7 +11,7 @@ There two endpoints available on the backend:
 
 ## Installation
 In order to run the backend application at least JDK 11 is required.
-To start up the application on your local machine, select ```local``` maven profile and run ```mvn:clean install```.
+To start up the application on your local machine, select ```local``` maven profile and run ```mvn clean install```.
 After build success click run on your IDE.  Alternatively, you can achieve the same by executing this maven goal ```mvn spring-boot:run -Plocal```. 
 
 In local environments, backend is accessible only from the origin ```http://localhost:3000``` which is the default local address for React applications. 
@@ -44,46 +44,94 @@ docker-compose up -d --build
 #### Response Body
 ```
 {
-    "id": "3980ff01-ec08-4cc4-9a3e-712c03ab5151",
-    "version": 0,
-    "createdDate": "2021-12-18T22:16:07.191177+03:00",
-    "lastModifiedDate": "2021-12-18T22:16:07.191177+03:00",
-    "firstPlayerId": 1,
-    "secondPlayerId": 2,
-    "initialStoneCount": 6,
-    "activePlayer": 0,
-    "winner": -1,
-    "finished": false,
-    "board": {
-        "id": 1,
+  "id": "3980ff01-ec08-4cc4-9a3e-712c03ab5151",
+  "version": 0,
+  "createdDate": "2021-12-18T22:16:07.191177+03:00",
+  "lastModifiedDate": "2021-12-18T22:16:07.191177+03:00",
+  "firstPlayerId": 1,
+  "secondPlayerId": 2,
+  "initialStoneCount": 6,
+  "activePlayer": 0,
+  "winner": -1,
+  "finished": false,
+  "board": {
+    "id": "0c3d1ab1-8da4-4764-a220-8ec74a7a08a5",
+    "state": [
+      {
         "pits": [
-            [6, 6, 6, 6, 6, 6, 0],
-            [6, 6, 6, 6, 6, 6, 0]
+          {
+            "type": 0, // little pit
+            "stoneCount": 6
+          },
+          ...
+          {
+            "type": 1, // big pit
+            "stoneCount": 0
+          }
         ]
-    }
+      },
+      {
+        "pits": [
+          {
+            "type": 0, // little pit
+            "stoneCount": 6
+          },
+          ...
+          {
+            "type": 1, // big pit
+            "stoneCount": 0
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 ### Moving Stones ```GET /api/v1/game/play/{gameId}?pit={index}```
 #### Response Body
 ```
 {
-    "id": "3980ff01-ec08-4cc4-9a3e-712c03ab5151",
-    "version": 0,
-    "createdDate": "2021-12-18T22:16:07.191177+03:00",
-    "lastModifiedDate": "2021-12-18T22:16:07.191177+03:00",
-    "firstPlayerId": 1,
-    "secondPlayerId": 2,
-    "initialStoneCount": 6,
-    "activePlayer": 0,
-    "winner": -1,
-    "finished": false,
-    "board": {
-        "id": 1,
+  "id": "3980ff01-ec08-4cc4-9a3e-712c03ab5151",
+  "version": 0,
+  "createdDate": "2021-12-18T22:16:07.191177+03:00",
+  "lastModifiedDate": "2021-12-18T22:16:07.191177+03:00",
+  "firstPlayerId": 1,
+  "secondPlayerId": 2,
+  "initialStoneCount": 6,
+  "activePlayer": 0,
+  "winner": -1,
+  "finished": false,
+  "board": {
+    "id": "0c3d1ab1-8da4-4764-a220-8ec74a7a08a5",
+    "state": [
+      {
         "pits": [
-            [0, 7, 7, 7, 7, 7, 1],
-            [6, 6, 6, 6, 6, 6, 0]
+          {
+            "type": 0, // little pit
+            "stoneCount": 0
+          },
+          ...
+          {
+            "type": 1, // big pit
+            "stoneCount": 1
+          }
         ]
-    }
+      },
+      {
+        "pits": [
+          {
+            "type": 0, // little pit
+            "stoneCount": 6
+          },
+          ...
+          {
+            "type": 1, // big pit
+            "stoneCount": 0
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 
