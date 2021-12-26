@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.jurengis</groupId>
-	<artifactId>mancala</artifactId>
+	<artifactId>mancala-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mancala-game</name>
-	<description>Mancala Game</description>
+	<name>mancala-backend</name>
+	<description>Mancala Backend</description>
 
 	<properties>
 		<java.version>11</java.version>
