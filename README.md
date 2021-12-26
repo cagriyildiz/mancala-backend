@@ -9,17 +9,13 @@ There two endpoints available on the backend:
  - Creating the game session: ```/api/v1/game/create```
  - Moving stones from a chosen pit: ```/api/v1/game/play```
 
-React is used to create the user interface of this game.
-Since game state changes after every turn it is appropriate to use a framework like React to minimize the need for writing code.
-
 ## Game Play
 ![Mancala Game Play](static/gameplay.gif "Game Play")
 
 ## Installation
-In order to run the backend application at least JDK 11 is required. For the frontend, make sure to use the latest version of Node to get better performance.
+In order to run the backend application at least JDK 11 is required.
 To start up the application on your local machine, select ```local``` maven profile and run ```mvn:clean install```.
-After build success click run on your IDE.  Alternatively, you can achieve the same by executing this maven goal ```mvn spring-boot:run -Plocal```.
-After Spring Boot application starts, you need to start up the React application by simply running ```npm start``` under ```/src/main/frontend``` directory. 
+After build success click run on your IDE.  Alternatively, you can achieve the same by executing this maven goal ```mvn spring-boot:run -Plocal```. 
 
 In local environments, backend is accessible only from the origin ```http://localhost:3000``` which is the default local address for React applications. 
 If you want to change this default behaviour you need to modify the property ```jurengis.com.mancala.cors.allowed-origins``` in the [application-local.yaml](./src/main/resources/application-local.yaml) file.
@@ -36,8 +32,6 @@ $env:SPRING_PROFILES_ACTIVE='local' (Windows)
 docker-compose up -d --build
 ```
 ---
-
-After both backend and frontend run successfully, you can play the game by opening [localhost](http://localhost:3000) in your browser.
 
 ## Usage
 ### Creating New Game Session ```POST /api/v1/game/create```
