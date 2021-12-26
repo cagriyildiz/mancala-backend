@@ -9,9 +9,6 @@ There two endpoints available on the backend:
  - Creating the game session: ```/api/v1/game/create```
  - Moving stones from a chosen pit: ```/api/v1/game/play```
 
-## Game Play
-![Mancala Game Play](static/gameplay.gif "Game Play")
-
 ## Installation
 In order to run the backend application at least JDK 11 is required.
 To start up the application on your local machine, select ```local``` maven profile and run ```mvn:clean install```.
