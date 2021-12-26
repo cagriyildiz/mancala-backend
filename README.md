@@ -22,7 +22,7 @@ After build success click run on your IDE.  Alternatively, you can achieve the s
 After Spring Boot application starts, you need to start up the React application by simply running ```npm start``` under ```/src/main/frontend``` directory. 
 
 In local environments, backend is accessible only from the origin ```http://localhost:3000``` which is the default local address for React applications. 
-If you want to change this default behaviour you need to modify the property ```bol.com.mancala.cors.allowed-origins``` in the [application-local.yaml](./src/main/resources/application-local.yaml) file.
+If you want to change this default behaviour you need to modify the property ```jurengis.com.mancala.cors.allowed-origins``` in the [application-local.yaml](./src/main/resources/application-local.yaml) file.
 
 ---
 ### Docker Support
